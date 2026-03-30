@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Hacker Minimal Azul</title>
+  <style>
+    :root {
+      --bg: #060b18;
+      --panel: #020817;
+      --border: rgba(60, 100, 180, 0.38);
+      --input-border: rgba(255, 255, 255, 0.08);
+      --blue: #4c83ff;
+      --blue-2: #76a1ff;
+      --text: #f4f7ff;
+      --muted: rgba(133, 169, 255, 0.62);
+      --danger: #ff4c6a;
+      --shadow: 0 0 0 1px rgba(70, 110, 210, 0.18), 0 12px 40px rgba(0, 0, 0, 0.45), inset 0 0 30px rgba(27, 55, 116, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at center, #0b132b 0%, #020617 100%);
+      overflow: hidden;
+    }
+
+    /* Fondo estilo hacker más fino */
+    .grid {
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(70,110,200,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(70,110,200,0.03) 1px, transparent 1px);
+      background-size: 36px 36px;
+      opacity: 0.3;
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.015), rgba(255,255,255,0.005) 50%, transparent 50%, transparent);
+      background-size: 100% 4px;
+      opacity: 0.15;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+    }
+
+    .shell { width: min(100%, 560px); padding: 20px; }
+
+    .panel {
+      position: relative;
+      background: linear-gradient(180deg, rgba(1,10,29,0.96), rgba(2,8,23,0.98));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 34px 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      text-align: center;
+      letter-spacing: 0.3em;
+      color: var(--blue-2);
+      font-family: monospace;
+      margin-bottom: 6px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 36px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title .dollar {
+      color: var(--blue);
+      font-weight: bold;
+    }
+
+    .caret {
+      width: 10px;
+      height: 1.1em;
+      background: var(--blue);
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .sub {
+      text-align: center;
+      color: var(--muted);
+      margin: 18px 0 28px;
+      font-family: monospace;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 10px;
+      font-family: monospace;
+      letter-spacing: 0.25em;
+      color: var(--blue-2);
+    }
+
+    .input {
+      width: 100%;
+      height: 52px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid var(--input-border);
+      border-radius: 7px;
+      color: white;
+      padding: 10px 14px;
+      transition: 0.2s;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 10px rgba(76,131,255,0.3);
+    }
+
+    .button {
+      margin-top: 26px;
+      width: 100%;
+      height: 56px;
+      border-radius: 10px;
+      border: 1px solid rgba(130, 164, 243, 0.24);
+      background: transparent;
+      color: white;
+      font-family: monospace;
+      font-size: 22px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .button span { color: var(--blue); }
+
+    .button:hover {
+      background: rgba(76,131,255,0.1);
+      box-shadow: 0 0 15px rgba(76,131,255,0.2);
+    }
+
+    .error {
+      color: var(--danger);
+      text-align: center;
+      font-family: monospace;
+      margin-top: 12px;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .error.show { opacity: 1; }
+
+    .shake {
+      animation: shake 0.4s;
+    }
+
+    @keyframes shake {
+      0%,100%{transform:translateX(0)}
+      25%{transform:translateX(-5px)}
+      75%{transform:translateX(5px)}
+    }
+  </style>
+</head>
+<body>
+
+<div class="grid"></div>
+<div class="scanlines"></div>
+
+<main class="shell">
+  <section class="panel" id="panel">
+    <div class="brand">CRISMORRIS.DEV</div>
+    <h1 class="title"><span class="dollar">$</span> access <div class="caret"></div></h1>
+    <div class="sub">// restricted area — identify yourself //</div>
+
+    <div class="field">
+      <label class="label">USER</label>
+      <input id="user" class="input" placeholder="crismorris">
+    </div>
+
+    <div class="field">
+      <label class="label">PASSWORD</label>
+      <input id="pass" type="password" class="input">
+    </div>
+
+    <button class="button" onclick="login()">[ <span>ENTER</span> ]</button>
+
+    <div id="error" class="error">ACCESS DENIED</div>
+  </section>
+</main>
+
+<script>
+  function login(){
+    const user = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
+    const panel = document.getElementById('panel');
+    const error = document.getElementById('error');
+
+    if(user === 'admin' && pass === '1234'){
+      error.classList.remove('show');
+      alert('ACCESS GRANTED');
+    } else {
+      error.classList.add('show');
+      panel.classList.add('shake');
+      setTimeout(()=> panel.classList.remove('shake'), 400);
+    }
+  }
+</script>
+
+</body>
+</html>
